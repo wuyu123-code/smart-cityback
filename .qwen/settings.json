@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker-compose *)",
+      "Bash(docker pull *)",
+      "Bash(docker images)",
+      "Bash(docker build *)",
+      "Bash(docker port *)",
+      "Bash(docker inspect *)",
+      "Bash(docker exec *)",
+      "Bash(docker logs *)",
+      "Bash(findstr *)",
+      "Bash(dir *)",
+      "Bash(type *)",
+      "Bash(curl *)",
+      "Bash(jq *)",
+      "Bash(timeout *)",
+      "Bash(powershell *)",
+      "Bash(docker rmi *)",
+      "Bash(docker ps *)",
+      "Bash(move *)",
+      "Bash(icacls *)",
+      "Bash(python *)",
+      "Bash(select-object *)",
+      "Bash(docker volume *)"
+    ]
+  },
+  "$version": 3
+}

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  metro-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: metro-backend
+    ports:
+      - "${BACKEND_HOST_PORT:-8092:8092}"
+    environment:
+      - NODE_ENV=production
+      - PORT=8092
+      - AMAP_KEY=${AMAP_KEY:-3dacceca72db0f91c59baeedc4257028}
+      # Docker 容器内使用服务名 mysql 连接数据库
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=${MYSQL_USER:-root}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-123456}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-smart_metro}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - metro-network
+    restart: unless-stopped
+
+  mysql:
+    image: docker.m.daocloud.io/library/mysql:8.0.32
+    container_name: metro-mysql
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:-123456}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-smart_metro}
+      - TZ=Asia/Shanghai
+    ports:
+      - "${MYSQL_HOST_PORT:-3308:3306}"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./line.sql:/docker-entrypoint-initdb.d/line.sql
+      - ./mysql.cnf:/etc/mysql/conf.d/custom.cnf
+    networks:
+      - metro-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_PASSWORD:-123456}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+
+networks:
+  metro-network:
+    driver: bridge

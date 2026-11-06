@@ -1,0 +1,11 @@
+{
+  "builder": {
+    "entitlements": ["network.host"]
+  },
+  "registry-mirrors": [
+    "https://docker.1panel.live",
+    "https://hub.rat.dev",
+    "https://docker.m.daocloud.io"
+  ],
+  "live-restore": false
+}
